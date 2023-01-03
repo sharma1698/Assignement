@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Slot;
 use DB;
+use Illuminate\Support\Facades\Validator;
 
 class SlotController extends Controller
 {
@@ -29,14 +30,21 @@ class SlotController extends Controller
         $data = $request->all();
         $key= array_keys($data);
         $val = array_values($data);
-        $request->validate([
-           $key[0] =>'required|numeric|gt:-1'
-        ]);
-        $field_col = substr($key[0], -1,1);
-        $length = strpos($key[0], '_') - 5;
-        $id = substr($key[0], 5 ,$length);
-        $k = "field". $field_col;
-        DB::table('slots')->where('id',$id)->update([$k => $val[0]]);
-        return redirect()->back();        
+        // $request->validate([
+        //    $key[0] =>'required|numeric|gt:-1'
+        // ]);
+        $validator = Validator::make($data, [
+            $key[0] => ['required', 'numeric','gt:-1'],
+         ]);
+         if($validator->fails()){
+            return response()->json($validator->messages(), 200);
+        }else{
+            $field_col = substr($key[0], -1,1);
+            $length = strpos($key[0], '_') - 5;
+            $id = substr($key[0], 5 ,$length);
+            $k = "field". $field_col;
+            DB::table('slots')->where('id',$id)->update([$k => $val[0]]);
+            return response()->json(['success'=>"successfully updated slot"]);        
+        }     
     }
 }

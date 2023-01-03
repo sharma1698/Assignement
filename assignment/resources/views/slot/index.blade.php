@@ -60,8 +60,6 @@ $("#add_slot").click(function(){
     });
 });
 
-
-
 $('input').on('focusin', function() {
   var updated_field= $(this).attr("id") ;
   var slot_id = $("#update_slot").val(updated_field);
@@ -69,30 +67,31 @@ $('input').on('focusin', function() {
 
 $("#update_slot").click(function(){
    var slot_field = $(this).val();
-   var updated_val= $("#"+slot_field).val();
-   $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+   if(slot_field==""){
+    $(".msg").text("Please select field to update");      
+   }else{
+    var updated_val= $("#"+slot_field).val();
+    $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+        type: "POST",
+        url: "{{route('update.slot')}}",
+        data: slot_field +'='+updated_val ,
+        success: function(msg) {
+            if(msg.success){
+                $(".msg").html(msg.success);
+            }else{
+                $.each(msg, function (index, value)  
+                    {  
+                        $(".msg").html(value); 
+                    });  
+            
             }
-        });
-    $.ajax({
-    type: "POST",
-    url: "{{route('update.slot')}}",
-    data: slot_field +'='+updated_val ,
-    success: function(msg) {
-        console.log(msg);
-        if(msg.success){
-            $(".msg").html(msg.success);
-        }else{
-            console.log(msg.message);
-            $(".msg").html(msg.message); 
-        }
-    },
-    error: function(data){
-        var errors = data.responseJSON;
-        $(".msg").text(errors.message);       
+           }        });
     }
-    });
 });
 
 </script>

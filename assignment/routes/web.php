@@ -19,7 +19,7 @@ use App\Http\Controllers\SessionController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/slot', [SlotController::class , 'index']);
+Route::get('/slot', [SlotController::class , 'index'])->name('slot.index');
 Route::post('/add_slot', [SlotController::class, 'store'])->name("add.slot");
 Route::post('/update_slot', [SlotController::class, 'update'])->name("update.slot");
 Route::get('/session', [SessionController::class , 'index'])->name('session.index');
