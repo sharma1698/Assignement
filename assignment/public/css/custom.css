@@ -1,0 +1,10 @@
+.slot_style
+{
+    border-style:solid;
+    display:inline-block;
+    padding:20px;
+}
+
+.btn_style , div{
+    margin:20px;
+}
